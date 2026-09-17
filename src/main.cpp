@@ -9,6 +9,7 @@
 #include "pros/motors.h"
 #include "pros/optical.hpp"
 #include "pros/rtos.hpp"
+#include "autons.h"
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -385,9 +386,7 @@ void debug_auton() {
  }
 
 void autonomous() {
-    chassis.setPose(0,0,0);
-    chassis.moveToPoint(0, 24, 5000);
-
+    mainAuton();
 }
 
 /**
