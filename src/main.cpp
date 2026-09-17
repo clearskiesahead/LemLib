@@ -387,7 +387,22 @@ void debug_auton() {
  }
 
 void autonomous() {
-    mainAuton();
+        //start auton
+    chassis.setPose(-14.5,-61.5, 135);
+    chassis.moveToPoint(-24, -48, 2000, {.forwards = false});
+
+    // lift.move_absolute(50, 70);
+    // pros::delay(500);
+    // lift.move_absolute(0, 70);
+    // claw.move(-120);
+    // chassis.swingToheading(90);
+    // chassis.setPose(-72+ getLeft(), chassis.getPose().y, chassis.getPose().theta);
+    // chassis.moveToPoint(0, -48, 2000);
+    // chassis.turnToHeading(180, 2000);
+    // chassis.setPose(-72 + getFront(), chassis.getPose().y, chassis.getPose().theta);
+    // chassis.moveToPoint(0, -65, 2000);
+    // chassis.moveToPoint(0, -60, 2000);
+    // chassis.moveToPoint(0, -65, 2000);
 }
 
 /**
