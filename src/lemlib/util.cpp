@@ -1,20 +1,37 @@
-#include <vector>
-#include "lemlib/pose.hpp"
 #include "lemlib/util.hpp"
 
-float lemlib::slew(float target, float current, float maxChange) {
-    float change = target - current;
-    if (maxChange == 0) return target;
-    if (change > maxChange) change = maxChange;
-    else if (change < -maxChange) change = -maxChange;
-    return current + change;
+using namespace units;
+
+namespace lemlib {
+
+Angle angleError(Angle target, Angle position, std::optional<AngularDirection> direction) {
+    // Wrap the angle to be within 0pi and 2pi radians
+    target = mod(mod(target, 1_stRot) + 1_stRot, 1_stRot);
+
+    Angle error = target - position;
+    if (!direction) return from_stDeg(std::remainder(to_stDeg(error), 360));
+    if (direction == AngularDirection::CW_CLOCKWISE) return error < 0_stRot ? error + 1_stRot : error;
+    else return error > 0_stRot ? error - 1_stRot : error;
 }
 
-constexpr float lemlib::sanitizeAngle(float angle, bool radians) {
-    if (radians) return std::fmod(std::fmod(angle, 2 * M_PI) + 2 * M_PI, 2 * M_PI);
-    else return std::fmod(std::fmod(angle, 360) + 360, 360);
+Number slew(Number target, Number current, Number maxChangeRate, Time deltaTime, SlewDirection restrictDirection) {
+    if (maxChangeRate == 0) return target;
+
+    const Number change = target - current;
+
+    // only restrict change for specified directions
+    if (restrictDirection == SlewDirection::INCREASING && change < 0) return target;
+    if (restrictDirection == SlewDirection::DECREASING && change > 0) return target;
+
+    // check if the change is within the limit
+    if (abs(change) > abs(maxChangeRate * to_sec(deltaTime)))
+        return current + (maxChangeRate * to_sec(deltaTime) * sgn(change));
+
+    // return the target if no restriction is necessary
+    return target;
 }
 
+<<<<<<< HEAD
 float lemlib::angleError(float target, float position, bool radians, AngularDirection direction) {
     // bound angles from 0 to 2pi or 0 to 360
     target = sanitizeAngle(target, radians);
@@ -29,27 +46,38 @@ float lemlib::angleError(float target, float position, bool radians, AngularDire
         default: // choose the shortest path
             return std::remainder(rawError, max);
     }
+=======
+Number constrainPower(Number power, Number max, Number min) {
+    // respect minimum speed
+    if (abs(power) < min) power = sgn(power) * min;
+    // respect maximum speed
+    power = std::clamp(power, -max, max);
+    return power;
+>>>>>>> master
 }
 
-float lemlib::avg(std::vector<float> values) {
-    float sum = 0;
-    for (float value : values) { sum += value; }
-    return sum / values.size();
+DriveOutputs desaturate(Number lateralOutput, Number angularOutput) {
+    const Number left = lateralOutput - angularOutput;
+    const Number right = lateralOutput + angularOutput;
+    const Number sum = abs(left) + abs(right);
+    if (sum <= 1.0) return {left, right};
+    else return {left / sum, right / sum};
 }
 
-float lemlib::ema(float current, float previous, float smooth) {
-    return (current * smooth) + (previous * (1 - smooth));
-}
-
-float lemlib::getCurvature(Pose pose, Pose other) {
-    // calculate whether the pose is on the left or right side of the circle
-    float side = lemlib::sgn(std::sin(pose.theta) * (other.x - pose.x) - std::cos(pose.theta) * (other.y - pose.y));
+Curvature getSignedTangentArcCurvature(Pose start, V2Position end) {
+    // whether the pose is on the left or right side of the arc
+    const V2Position delta = end - start;
+    const Number side = sgn(sin(start.orientation) * delta.x - cos(start.orientation) * delta.y);
     // calculate center point and radius
-    float a = -std::tan(pose.theta);
-    float c = std::tan(pose.theta) * pose.x - pose.y;
-    float x = std::fabs(a * other.x + other.y + c) / std::sqrt((a * a) + 1);
-    float d = std::hypot(other.x - pose.x, other.y - pose.y);
-
-    // return curvature
+    const Number a = -tan(start.orientation);
+    const Length c = tan(start.orientation) * start.x - start.y;
+    const Length x = abs(a * end.x + end.y + c) / sqrt(a * a + 1);
+    const Length d = start.distanceTo(end);
+    // return the curvature
     return side * ((2 * x) / (d * d));
 }
+<<<<<<< HEAD
+=======
+
+} // namespace lemlib
+>>>>>>> master

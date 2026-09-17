@@ -33,7 +33,7 @@ Here's an example of the same function call from above, but with all of the defa
 chassis.turnToHeading(
     270,
     4000,
-    {.maxSpeed = 120}, // will never exceed 120
+    {.maxSpeed = 127}, // will never exceed 127
     true // this motion will not block execution
 ); 
 ```
@@ -70,7 +70,7 @@ Swing motions are unique in that they only use half the drivetrain to move.
 Here's an example of how you'd use a swing turn:
 
 ```cpp
-chassis.setPose(0,0,0); // the robot now things that its at (0,0) with heading of 0 degrees
+chassis.setPose(0,0,0); // the robot now thinks that it's at (0,0) with heading of 0 degrees
 chassis.swingToHeading(45, 4000); // swing to face 45 degrees, with a timeout of 4000 ms
 ```
 

@@ -42,7 +42,7 @@ This needs to be done for all motors on the drivetrain
 |    **Left**       | Reversed              | Forwards              |
 |    **Right**      | Forwards              | Reversed              |
 
-Now, let's update our configuration. If a motor is reversed, it has a negative port. If its forwards (not reversed), it has a positive port:
+Now, let's update our configuration. If a motor is reversed, it has a negative port. If it's forwards (not reversed), it has a positive port:
 
 ```cpp
 pros::MotorGroup left_motors({-1, 2, -3}); // left motors on ports 1 (reversed), 2 (forwards), and 3 (reversed)
@@ -270,7 +270,7 @@ Now that we have the encoders configured, we need to determine the offset of the
 
 In the diagram, there are 3 tracking wheels: one vertical tracking wheel on the left with an offset of 4.6", one vertical tracking wheel on the right with an offset of 1.7", and one horizontal tracking wheel at the back with an offset of 4.5"
 
-The offset of a tracking wheel can be positive or negative, depending on whether its a vertical or horizontal wheel and where it is relative to the tracking center. See the tables below:
+The offset of a tracking wheel can be positive or negative, depending on whether it's a vertical or horizontal wheel and where it is relative to the tracking center. See the tables below:
 
 ###### Vertical Tracking Wheel
 
@@ -292,7 +292,11 @@ As said previously, the marketed diameter of wheels do not match their actual di
 
 #### Gear Ratio
 
+<<<<<<< HEAD
 Users may wish to gear their tracking wheels. Contrary to what you'd expect, its not done to increase the precision of the sensor. Instead, tracking wheels may be geared to make them thinner. The gear ratio is equal to the teeth of the driven gear divided by the teeth of the driving gear. If you don't gear the tracking wheel, set the gear ratio to 1.
+=======
+Users may wish to gear their tracking wheels. Contrary to what you'd expect, it's not done to increase the precision of the sensor. Instead, tracking wheels may be geared to make them thinner. The gear ratio is equal to the teeth of the driven gear divided by the teeth of the driving gear. If you don't gear the tracking wheel, the gear ratio is equal to 1.
+>>>>>>> master
 
 #### Config
 
