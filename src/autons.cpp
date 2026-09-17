@@ -37,9 +37,11 @@ extern pros::Distance rightdistance;
 //main 15 second auton
 
 void mainAuton() {
+    
     //start auton
     chassis.setPose(-14.5,-61.5, 135);
     chassis.moveToPoint(-24, -48, 2000, {.forwards = false});
+
     // lift.move_absolute(50, 70);
     // pros::delay(500);
     // lift.move_absolute(0, 70);
